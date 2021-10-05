@@ -22,7 +22,7 @@ class EnfermedadInfecciosa {
 }
 
 class EnfermedadAutoinmune {
-	var cantCelulasAmenazadas = 0
+	const cantCelulasAmenazadas = 0
 	var cantVecesProducidoEfecto = 0
 	
 	method cantCelulasAmenazadas() = cantCelulasAmenazadas

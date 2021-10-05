@@ -1,7 +1,7 @@
 class Persona {
-	var temperatura = 36
-	var cantCelulas = 7000000
-	var enfermedades = #{}
+	var property temperatura = 36
+	var property cantCelulas = 7000000
+	const enfermedades = #{}
 	
 	method cantCelulas() = cantCelulas
 	

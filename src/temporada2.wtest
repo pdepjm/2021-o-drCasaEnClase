@@ -1,0 +1,59 @@
+import personas.*
+import enfermedades.*
+
+describe "Temporada 2" {
+
+	const malaria = new EnfermedadInfecciosa(cantCelulasAmenazadas = 5000)
+	const otitis = new EnfermedadInfecciosa(cantCelulasAmenazadas = 1000)
+	const lupus = new EnfermedadAutoinmune(cantCelulasAmenazadas = 5000)
+	const logan = new Persona()
+	var cameron // = new Medico(dosis= 5)
+	var house // = new JefeDepartamento(subordinados= #{cameron}, dosis = 0)
+
+	method initialize() {
+		logan.contraer(malaria)
+		logan.contraer(otitis)
+		logan.contraer(lupus)
+	}
+
+	test "Una enfermedad infecciosa reduce sus celulas amenazantes cuando se atenua" {
+		const celulasAmenazadasAlPrincipio = malaria.cantCelulasAmenazadas()
+		malaria.atenuar(100, logan)
+		assert.equals(celulasAmenazadasAlPrincipio - 1500, malaria.cantCelulasAmenazadas())
+	}
+
+	test "Cuando una enfermedad infecciosa es atenuada y queda en 0 celulas, no afecta mas a la persona" {
+		malaria.atenuar(20000, logan)
+		assert.notThat(logan.tenes(malaria))
+	}
+
+	test "Una enfermedad autoinmune reduce sus celulas amenazantes cuando se atenua" {
+		const celulasAmenazadasAlPrincipio = lupus.cantCelulasAmenazadas()
+		lupus.atenuar(100, logan)
+		assert.equals(celulasAmenazadasAlPrincipio - 1500, lupus.cantCelulasAmenazadas())
+	}
+
+	test "Cuando un doctor atiende a un paciente, atenua sus enfermedades" {
+		const celulasAmenazadasPorMalariaAlPrincipio = malaria.cantCelulasAmenazadas()
+		const celulasAmenazadasPorOtitisAlPrincipio = otitis.cantCelulasAmenazadas()
+		const celulasAmenazadasPorLupusAlPrincipio = lupus.cantCelulasAmenazadas()
+		cameron.atender(logan)
+		assert.equals(celulasAmenazadasPorMalariaAlPrincipio - 75, malaria.cantCelulasAmenazadas())
+		assert.equals(celulasAmenazadasPorOtitisAlPrincipio - 75, otitis.cantCelulasAmenazadas())
+		assert.equals(celulasAmenazadasPorLupusAlPrincipio - 75, lupus.cantCelulasAmenazadas())
+	}
+
+	test "Cuando un doctor contrae la enfermedad, se atiende a si mismo" {
+		const celulasAmenazadasPorMalariaAlPrincipio = malaria.cantCelulasAmenazadas()
+		cameron.contraer(malaria)
+		assert.equals(celulasAmenazadasPorMalariaAlPrincipio - 75, malaria.cantCelulasAmenazadas())
+	}
+
+	test "Cuando un jefe de departamento atiende a alguien, un subordinado lo atiende" {
+		const celulasAmenazadasPorMalariaAlPrincipio = malaria.cantCelulasAmenazadas()
+		house.atender(logan)
+		assert.equals(celulasAmenazadasPorMalariaAlPrincipio - 75, malaria.cantCelulasAmenazadas())
+	}
+
+}
+

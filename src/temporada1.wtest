@@ -1,0 +1,67 @@
+import personas.*
+import enfermedades.*
+
+describe "Temporada 1" {
+
+	const malaria = new EnfermedadInfecciosa(cantCelulasAmenazadas = 5000)
+	const otitis = new EnfermedadInfecciosa(cantCelulasAmenazadas = 1000)
+	const lupus = new EnfermedadAutoinmune(cantCelulasAmenazadas = 5000)
+	const malariaPulenta = new EnfermedadInfecciosa(cantCelulasAmenazadas = 80000)
+	const otitisAgresiva = new EnfermedadInfecciosa(cantCelulasAmenazadas = 300001)
+	const logan = new Persona()
+	const frank = new Persona(cantCelulas = 3500000)
+	const roberto = new Persona(temperatura = 36, cantCelulas = 9000000, enfermedades = [ malaria, otitis, lupus, otitisAgresiva, otitisAgresiva ])
+
+	method initialize() {
+		logan.contraer(malaria)
+		logan.contraer(otitis)
+		logan.contraer(lupus)
+	}
+
+	test "Persona contrae enfermedad" {
+		frank.contraer(malariaPulenta)
+		assert.that(frank.tenes(malariaPulenta))
+	}
+
+	test "Enfermedad infecciosa se reproduce" {
+		malaria.reproducirse()
+		assert.equals(10000, malaria.cantCelulasAmenazadas())
+	}
+
+	test "Persona vive un día" {
+		const cantCelulasAntesDeSerAfectadas = logan.cantCelulas()
+		const temperaturaAntesDeSerAfectada = logan.temperatura()
+		logan.viviUnDia()
+		assert.equals(cantCelulasAntesDeSerAfectadas - 5000, logan.cantCelulas())
+		assert.equals(temperaturaAntesDeSerAfectada + 6, logan.temperatura())
+	}
+
+	test "La cantidad total de celulas amenazadas por enfermedades agresivas es la suma de las celulas que amenaza cada  enfermedad agresiva" {
+		const cantidadCelulasAmenazadasOtitis = otitisAgresiva.cantCelulasAmenazadas() * 2
+		const cantidadCelulasAmenazadas = roberto.cantidadDeCelulasAgresivas()
+		assert.equals(cantidadCelulasAmenazadasOtitis, cantidadCelulasAmenazadas)
+	}
+
+	test "La temperatura de una persona no puede subir a mas de 45 grados" {
+		logan.modificarTemperatura(10)
+		assert.equals(45, logan.temperatura())
+	}
+
+	test "Una persona esta en coma cuando su temperatura es 45" {
+		logan.modificarTemperatura(45)
+		assert.that(logan.estaEnComa())
+	}
+
+	test "Una persona esta en coma cuando su cantidad de celulas es menor a 1000000" {
+		logan.cantCelulas(999999)
+		assert.that(logan.estaEnComa())
+	}
+
+	test "Una enfermadad autoinmune con mas de 30 dias en la persona debe ser agresiva" {
+		// 31.times({ () => enfermedadPersistente.producirEfecto(logan)})		
+		const enfermedadPersistente = new EnfermedadAutoinmune(cantCelulasAmenazadas = 5000, cantVecesProducidoEfecto = 31)
+		assert.that(enfermedadPersistente.esAgresiva(logan))
+	}
+
+}
+
