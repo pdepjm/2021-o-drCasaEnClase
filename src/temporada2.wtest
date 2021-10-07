@@ -7,8 +7,8 @@ describe "Temporada 2" {
 	const otitis = new EnfermedadInfecciosa(cantCelulasAmenazadas = 1000)
 	const lupus = new EnfermedadAutoinmune(cantCelulasAmenazadas = 5000)
 	const logan = new Persona()
-	var cameron // = new Medico(dosis= 5)
-	var house // = new JefeDepartamento(subordinados= #{cameron}, dosis = 0)
+	const cameron  = new Medico(dosis= 5)
+	const house  = new JefeDeDepartamento(subordinados= #{cameron}, dosis = 0)
 
 	method initialize() {
 		logan.contraer(malaria)

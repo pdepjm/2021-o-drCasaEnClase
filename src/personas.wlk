@@ -37,4 +37,44 @@ class Persona {
 	method enfermedadesAgresivas() = enfermedades.filter({enfermedad => enfermedad.esAgresiva(self)})
 	
 	method laQueMasCelulasAfecta() = enfermedades.max({enfermedad => enfermedad.cantCelulasAmenazadas()})
+	
+	method curarseDe(enfermedad){
+		enfermedades.remove(enfermedad)
+	}
+	
+	method recibirMedicamento(dosis){
+		enfermedades.forEach({enfermedad => enfermedad.atenuar(dosis,self)})
+	}
+	
+	method disminuirTodaTemperatura(){
+		temperatura = 0
+	}
 }	
+
+class Medico inherits Persona{
+	const dosis
+	
+	method atender(paciente){
+		paciente.recibirMedicamento(dosis)
+	}	
+	
+	override method contraer(enfermedad){
+		super(enfermedad)
+		self.atender(self)
+	}
+}
+
+class JefeDeDepartamento inherits Medico{
+	const subordinados = #{}
+	
+	override method atender(paciente){
+		subordinados.anyOne().atender(paciente)
+	}
+}
+
+
+
+
+
+
+

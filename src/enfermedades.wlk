@@ -1,5 +1,21 @@
-class EnfermedadInfecciosa {
-	var cantCelulasAmenazadas = 0
+
+class EnfermedadDeCelulas{
+	var cantCelulasAmenazadas 
+	
+	method atenuar(dosis,persona){
+		self.reducirCelulas(dosis)
+		if(cantCelulasAmenazadas == 0){
+			persona.curarseDe(self)
+		}
+	}
+	
+	method reducirCelulas(dosis){
+		cantCelulasAmenazadas = (cantCelulasAmenazadas - dosis * 15).max(0)
+	}
+}
+
+
+class EnfermedadInfecciosa inherits EnfermedadDeCelulas{
 	
 	method reproducirse(){
 		cantCelulasAmenazadas = cantCelulasAmenazadas * 2
@@ -21,8 +37,7 @@ class EnfermedadInfecciosa {
 	
 }
 
-class EnfermedadAutoinmune {
-	const cantCelulasAmenazadas = 0
+class EnfermedadAutoinmune inherits EnfermedadDeCelulas{
 	var cantVecesProducidoEfecto = 0
 	
 	method cantCelulasAmenazadas() = cantCelulasAmenazadas
@@ -34,6 +49,27 @@ class EnfermedadAutoinmune {
 	
 	method esAgresiva(persona) = cantVecesProducidoEfecto > 30
 }
+
+object laHipotermia{
+	method producirEfecto(persona){
+		persona.disminuirTodaTemperatura()
+	}
+	
+	method esAgresiva(persona) = true
+	
+	method atenuar(dosis){}
+	
+	method cantCelulasAmenazadas() = 0
+	
+}
+
+
+
+
+
+
+
+
 
 // otra versión: (LA MALA)
 /*
